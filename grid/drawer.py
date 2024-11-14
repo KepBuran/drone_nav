@@ -9,6 +9,7 @@ class GridDrawer:
         self.draw_grid_lines = draw_grid_lines
 
     def draw(self, grid: Grid, color=(0, 255, 0)):
+        self.pygame.draw.rect(self.screen, (250, 250, 250), (grid.x_offset, grid.y_offset, grid.grid_width, grid.grid_height), 1)
         for x in range(0, grid.grid_width, grid.cell_size):
             for y in range(0, grid.grid_height, grid.cell_size):
                 rect = self.pygame.Rect(x + grid.x_offset, y + grid.y_offset, grid.cell_size, grid.cell_size)
@@ -32,17 +33,23 @@ class GridDrawer:
                 if self.draw_grid_lines:
                     self.pygame.draw.rect(self.screen, (200, 200, 200), rect, 1)
         # Draw grid borders
-        self.pygame.draw.rect(self.screen, (200, 200, 200), (grid.x_offset, grid.y_offset, grid.grid_width, grid.grid_height), 1)
 
     def draw_clusters(self, grid: Grid, clusters_grid, clusters_amount):
         # Create a dictionary mapping each cluster index to a random color
-        clusters_color = {i: (random.random() * 255, random.random() * 255, random.random() * 255) for i in range(clusters_amount)}
+        # clusters_color = {i: (random.random() * 255, random.random() * 255, random.random() * 255) for i in range(clusters_amount)}
+
+        # Hardcoded shades of gray
+        GRAY_GROWTH = 25
+        gray_shades = [(220 - i * GRAY_GROWTH, 220 - i * GRAY_GROWTH, 220 - i * GRAY_GROWTH) for i in range(8)]
+
+        # Use the hardcoded gray shades for clusters
+        clusters_color = {i: gray_shades[i] for i in range(8)}
 
         for x in range(0, grid.grid_width, grid.cell_size):
             for y in range(0, grid.grid_height, grid.cell_size):
                 rect = self.pygame.Rect(x + grid.x_offset, y + grid.y_offset, grid.cell_size, grid.cell_size)
                 cluster = clusters_grid[y // grid.cell_size][x // grid.cell_size]
-                color_with_opacity = clusters_color[cluster] + (255,)
+                color_with_opacity = clusters_color[cluster % len(clusters_color)] + (255,)
                 # Create a surface with per-pixel alpha
                 cell_surface = self.pygame.Surface((grid.cell_size, grid.cell_size), self.pygame.SRCALPHA)
                 cell_surface.fill(color_with_opacity)

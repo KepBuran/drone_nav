@@ -25,6 +25,10 @@ class GridGenerator:
 
         return self
     
+    def get_random_growth(self, min_growth = 2, max_growth = 5):
+        return random.randint(min_growth, max_growth)
+    
+    
     def bresenham_line(self, x0, y0, x1, y1):
         points = []
         dx = abs(x1 - x0)
@@ -74,7 +78,7 @@ class GridGenerator:
                 break
 
         width = random.randint(2, 5)
-        growth = random.randint(2, 4)
+        growth = self.get_random_growth()
 
         # # Make straight line between two points with given width and growth
 
@@ -129,7 +133,7 @@ class GridGenerator:
                 break
             offset_x, offset_y = random.randint(4, 10), random.randint(4, 10)
 
-        growth_value = random.randint(2, 4)
+        growth_value = self.get_random_growth()
 
         # Convert points to numpy arrays for easier calculations
         center_x = (x1 + x2) / 2
@@ -156,7 +160,7 @@ class GridGenerator:
         x1, y1 = random.randint(0, len(growth_grid[0]) - 1), random.randint(0, len(growth_grid) - 1)
 
         radius = random.randint(3, 8)
-        growth_value = random.randint(2, 4)
+        growth_value = self.get_random_growth()
 
         rows = len(growth_grid)
         cols = len(growth_grid[0])
