@@ -97,7 +97,7 @@ class Areas:
             
         return None
 
-    def build_drone_path(self, drone, area):
+    def build_drone_path(self, area):
         # Path is circular, so drone will visit all cells in the area and return to the starting point
         # For it start from the first cell of row, where first cell x index is 0
         # Then go to the last cell of the column
@@ -127,7 +127,7 @@ class Areas:
         path.append(cell)
 
         while True:
-            print("Current cell", cell[0], "Initial cell", initial_cell[0], cell[0][1] % 2 == 0)
+            # print("Current cell", cell[0], "Initial cell", initial_cell[0], cell[0][1] % 2 == 0)
             if (cell[0][1] % 2 == 0):
                 maybe_cell = self.find_area_cell(area, cell[0][0] + 1, cell[0][1])
                 if maybe_cell is not None:
@@ -179,17 +179,17 @@ class Areas:
                     path.append(cell) 
 
         if (cell[0][1] % 2 == 0):
-            print("Cell", cell, "is odd")
+            # print("Cell", cell, "is odd")
             while True: 
                 maybe_cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1])
-                print("Maybe cell", maybe_cell)
+                # print("Maybe cell", maybe_cell)
                 if (maybe_cell is None):
                     break
                 cell = maybe_cell
                 path.append(cell)
 
         while True:
-            print("Cell2", cell[0], initial_cell[0])
+            # print("Cell2", cell[0], initial_cell[0])
             if (cell[0][0] == initial_cell[0][0] and cell[0][1] == initial_cell[0][1]):
                 break
 
@@ -225,7 +225,7 @@ class Areas:
         for i, drone in enumerate(self.drones):
             area_index = self.drones_to_areas[i][1]
             area = self.areas[area_index]
-            self.drone_pathes.append(self.build_drone_path(drone, area))
+            self.drone_pathes.append(self.build_drone_path(area))
             # drone.set_path(path)
         
         # print("Drone pathes", self.drone_pathes)
@@ -269,6 +269,9 @@ class Areas:
                     aim_index += 1
                 self.drone_aims[index] = [path[aim_index], aim_index]
                 drone.set_direction_by_coords(path[aim_index][1])
+            
+            else:
+                drone.set_direction_by_coords(aim[0][1])
 
     def run(self, is_env_changed):
 
@@ -277,7 +280,7 @@ class Areas:
             return
         print("Running areas algorithm")
 
-        print('Grid length', len(self.grid.grid[0]))
+        # print('Grid length', len(self.grid.grid[0]))
 
         self.make_areas()
         self.set_drones_to_areas()

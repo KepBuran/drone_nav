@@ -1,6 +1,7 @@
 import math
 import random
 import numpy as np
+import copy
 
 from grid.grid import Grid
 
@@ -16,11 +17,11 @@ class GridGenerator:
 
     def generate_grid_sizes(self, cell_size):
         print("Generating grid sizes")
-        x_offset = random.uniform(0, 0.2) * self.screen_width
-        y_offset = random.uniform(0, 0.2) * self.screen_height
+        x_offset = random.uniform(0, 0.3) * self.screen_width
+        y_offset = random.uniform(0, 0.3) * self.screen_height
 
-        grid_width = random.uniform(0.6, 0.8) * self.screen_width
-        grid_height = random.uniform(0.6, 0.8) * self.screen_height
+        grid_width = random.uniform(0.5, 0.7) * self.screen_width
+        grid_height = random.uniform(0.5, 0.7) * self.screen_height
 
         self.grid = Grid(cell_size, math.floor(grid_width / cell_size) * cell_size, math.floor(grid_height / cell_size) * cell_size, x_offset, y_offset)
 
@@ -129,7 +130,6 @@ class GridGenerator:
 
         # Take random offset for the second point
         offset_x, offset_y = random.randint(2, int(grid_width / 5)), random.randint(2, int(grid_height / 5))
-        print('ellipse offset', offset_x, offset_y)
 
         x2, y2 = x1 + offset_x, y1 + offset_y
         # # Calculate the second point
@@ -194,7 +194,7 @@ class GridGenerator:
             print("You need to generate grid sizes first")
             return
         
-        growth_grid = self.grid.growth_grid.copy()
+        growth_grid = copy.deepcopy(self.grid.growth_grid)
 
         print("Generating growth grid lines")
         amount_of_lines = random.randint(4, 4)
@@ -208,11 +208,13 @@ class GridGenerator:
 
         print("Generating growth grid circles")
         amount_of_circles = random.randint(2, 3)
-        # for _ in range(amount_of_circles):
-            # growth_grid = self.generate_circle(growth_grid)
+        for _ in range(amount_of_circles):
+            growth_grid = self.generate_circle(growth_grid)
 
         self.grid.growth_grid = growth_grid
-        self.grid.grid = growth_grid.copy()
+        print("Growth grid generated")
+
+        self.grid.grid = copy.deepcopy(growth_grid)
 
         return self
         

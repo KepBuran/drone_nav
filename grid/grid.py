@@ -1,5 +1,5 @@
 import math
-
+import copy
 
 class Grid:
     def __init__(self, cell_size, grid_width, grid_height, x_offset=0, y_offset=0, draw_grid_lines=False):
@@ -10,13 +10,15 @@ class Grid:
         self.y_offset = y_offset
         self.draw_grid_lines = draw_grid_lines
         self.grid = [[1 for _ in range(math.floor(grid_width // cell_size))] for _ in range(math.floor(grid_height // cell_size))]
-        self.growth_grid = self.grid.copy()
+        self.growth_grid = copy.deepcopy(self.grid)
 
     def increase(self, growth_rate=0.1):
         for row in range(len(self.grid)):
             for col in range(len(self.grid[0])):
-                self.grid[row][col] += 1 * growth_rate
-                # self.grid[row][col] += self.growth_grid[row][col] * growth_rate
+                # self.grid[row][col] += 1 * growth_rate
+                self.grid[row][col] += self.growth_grid[row][col] * growth_rate
+                # if (self.growth_grid[row][col] > 1):
+                    # print("Growth grid value: ", self.growth_grid[row][col])
 
     def get_cells_sum(self):
         return sum(sum(row) for row in self.grid)
@@ -44,7 +46,11 @@ class Grid:
 
     def set_cell_value_in_radius(self, row, col, value, radius):
         if (radius == 0):
-            self.grid[row][col] = value
+            if (row >= 0 and row < len(self.grid) and col >= 0 and col < len(self.grid[0])):
+                self.grid[row][col] = value
+            else:
+                # print("set_cell_value_in_radius Out of bounds", row, col)
+                pass
             return
 
 

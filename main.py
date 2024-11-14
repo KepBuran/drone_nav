@@ -14,14 +14,14 @@ import matplotlib.pyplot as plt
 DRAW_ENVIRONMENT = True
 
 IS_GREEDY = False
-IS_AREAS = True
-IS_CLUSTER = False   
+IS_AREAS = False
+IS_CLUSTER = True   
 
 IS_DRAW_AREAS = True
 
-SCREEN_WIDTH = 1000 # 1500
+SCREEN_WIDTH = 1500 # 1500
 SCREEN_HEIGHT = 900
-CELL_SIZE = 10 # 5
+CELL_SIZE = 20 # 5
 
 print('Initializing the environment...')
 
@@ -53,7 +53,6 @@ if (IS_AREAS):
     swarm.set_algorithm(areas_algorithm)
 
 if (IS_CLUSTER):
-    cluster_algorithm.calculate_cluster()
     swarm.set_algorithm(cluster_algorithm)
 
 

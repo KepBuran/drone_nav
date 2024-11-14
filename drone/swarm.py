@@ -11,7 +11,7 @@ class Swarm:
         self.algorithm = None
 
         self.is_draw = is_draw
-        self.is_env_changed = False
+        self.is_env_changed = True
 
         self.init_drones(init_drones_amount)
 
