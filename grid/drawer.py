@@ -48,7 +48,15 @@ class GridDrawer:
         for x in range(0, grid.grid_width, grid.cell_size):
             for y in range(0, grid.grid_height, grid.cell_size):
                 rect = self.pygame.Rect(x + grid.x_offset, y + grid.y_offset, grid.cell_size, grid.cell_size)
-                cluster = clusters_grid[y // grid.cell_size][x // grid.cell_size]
+                grid_y = y // grid.cell_size
+                grid_x = x // grid.cell_size
+                if (grid_y >= len(clusters_grid) or grid_x >= len(clusters_grid[0])):
+                    continue
+
+                if (grid_y < 0 or grid_x < 0):
+                    continue
+
+                cluster = clusters_grid[grid_y][grid_x]
                 color_with_opacity = clusters_color[cluster % len(clusters_color)] + (255,)
                 # Create a surface with per-pixel alpha
                 cell_surface = self.pygame.Surface((grid.cell_size, grid.cell_size), self.pygame.SRCALPHA)

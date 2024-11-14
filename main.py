@@ -21,7 +21,9 @@ IS_DRAW_AREAS = True
 
 SCREEN_WIDTH = 1000 # 1500
 SCREEN_HEIGHT = 900
-CELL_SIZE = 50 # 5
+CELL_SIZE = 10 # 5
+
+print('Initializing the environment...')
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -31,14 +33,18 @@ clock = pygame.time.Clock()
 SPEED = 5
 GROWTH_RATE = 0.005 * 5
 
+print('Generating the grid...')
 grid_generator = GridGenerator(SCREEN_WIDTH, SCREEN_HEIGHT)
 grid = grid_generator.generate_grid(CELL_SIZE)
 grid_drawer = GridDrawer(pygame, screen, draw_grid_lines=DRAW_ENVIRONMENT)
 
+print('Initializing the swarm...')
 swarm = Swarm(pygame, screen, grid, SPEED, init_drones_amount=4, is_draw=DRAW_ENVIRONMENT)
 
+print('Initializing the logger...')
 logger = Logger(pygame, screen, grid, is_log_on_screen=DRAW_ENVIRONMENT)
 
+print('Initializing the algorithms...')
 greedy = Greedy(grid, swarm.drones)
 cluster_algorithm = Cluster(grid, swarm.drones)
 areas_algorithm = Areas(grid, swarm.drones)
@@ -53,13 +59,15 @@ if (IS_CLUSTER):
 
 iterations = 0
 
+print('Starting the simulation...')
+
 
 while True:
     iterations += 1
 
-    if (iterations % 2000 == 0 and iterations != 0):
-        grid = grid_generator.generate_grid(CELL_SIZE)
-        swarm.set_grid(grid)
+    # if (iterations % 2000 == 0 and iterations != 0):
+    #     grid = grid_generator.generate_grid(CELL_SIZE)
+    #     swarm.set_grid(grid)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -91,6 +99,7 @@ while True:
     # Logger logic
     logger.log_grid_sum()
     logger.log_iteration(iterations)
+    logger.log_is_even(len(grid.grid[0]))
 
     pygame.display.update()
     clock.tick(1000)

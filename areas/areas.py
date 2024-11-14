@@ -127,8 +127,8 @@ class Areas:
         path.append(cell)
 
         while True:
-            # print("Current path", [cell[0] for cell in path])
-            if (not cell[0][1] % 2):
+            print("Current cell", cell[0], "Initial cell", initial_cell[0], cell[0][1] % 2 == 0)
+            if (cell[0][1] % 2 == 0):
                 maybe_cell = self.find_area_cell(area, cell[0][0] + 1, cell[0][1])
                 if maybe_cell is not None:
                     cell = maybe_cell
@@ -144,12 +144,20 @@ class Areas:
                 if maybe_cell is None:
                     maybe_cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1] + 1)
                 
+                if maybe_cell is None:
+                    print("!!Error!!")
+
                 cell = maybe_cell
                 path.append(cell)
 
             else:
-                cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1])
-                path.append(cell)
+                maybe_cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1])
+                if (maybe_cell):
+                    cell = maybe_cell
+                    path.append(cell)
+                
+                else:
+                    break
                 # Ячейка після наступної
                 maybe_next_next_cell = self.find_area_cell(area, cell[0][0] - 2, cell[0][1])
                 if maybe_next_next_cell is None:
@@ -173,16 +181,24 @@ class Areas:
         if (cell[0][1] % 2 == 0):
             print("Cell", cell, "is odd")
             while True: 
-                maybe_cell = self.find_area_cell(area, cell[0][0], cell[0][1] - 1)
+                maybe_cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1])
+                print("Maybe cell", maybe_cell)
                 if (maybe_cell is None):
                     break
                 cell = maybe_cell
                 path.append(cell)
 
         while True:
-            print("Cell", cell, initial_cell)
+            print("Cell2", cell[0], initial_cell[0])
             if (cell[0][0] == initial_cell[0][0] and cell[0][1] == initial_cell[0][1]):
                 break
+
+            maybe_cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1])
+            if (maybe_cell):
+                cell = maybe_cell
+                path.append(cell)
+                continue
+
 
             maybe_cell = self.find_area_cell(area, cell[0][0] - 1, cell[0][1] - 1)
             if (maybe_cell):
@@ -254,9 +270,9 @@ class Areas:
                 self.drone_aims[index] = [path[aim_index], aim_index]
                 drone.set_direction_by_coords(path[aim_index][1])
 
-    def run(self):
+    def run(self, is_env_changed):
 
-        if (not self.grid.is_changed):
+        if (not is_env_changed):
             self.set_next_drones_aim()
             return
         print("Running areas algorithm")
@@ -267,8 +283,6 @@ class Areas:
         self.set_drones_to_areas()
         self.build_drone_paths()
         self.set_initial_drones_aims()
-
-        self.grid.is_changed = False
 
     
                     

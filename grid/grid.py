@@ -11,7 +11,6 @@ class Grid:
         self.draw_grid_lines = draw_grid_lines
         self.grid = [[1 for _ in range(math.floor(grid_width // cell_size))] for _ in range(math.floor(grid_height // cell_size))]
         self.growth_grid = self.grid.copy()
-        self.is_changed = True
 
     def increase(self, growth_rate=0.1):
         for row in range(len(self.grid)):

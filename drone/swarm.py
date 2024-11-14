@@ -11,13 +11,14 @@ class Swarm:
         self.algorithm = None
 
         self.is_draw = is_draw
+        self.is_env_changed = False
 
         self.init_drones(init_drones_amount)
 
     def set_grid(self, grid):
         self.grid = grid
         self.algorithm.grid = grid
-        grid.is_changed = True
+        self.is_env_changed = True
 
     def set_algorithm(self, algorithm):
         self.algorithm = algorithm
@@ -32,7 +33,8 @@ class Swarm:
             self.drones.append(Drone(self.pygame, self.screen, position, self.speed, (1, 1)))
 
     def update(self):
-        self.algorithm.run()
+        self.algorithm.run(self.is_env_changed)
+        self.is_env_changed = False
 
         for drone in self.drones:
             # Update and draw each drone

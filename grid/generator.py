@@ -15,6 +15,7 @@ class GridGenerator:
         return self.generate_grid_sizes(cell_size).generate_growth_grid().grid 
 
     def generate_grid_sizes(self, cell_size):
+        print("Generating grid sizes")
         x_offset = random.uniform(0, 0.2) * self.screen_width
         y_offset = random.uniform(0, 0.2) * self.screen_height
 
@@ -117,21 +118,26 @@ class GridGenerator:
 
 
         return growth_grid
-
+    
 
     def generate_ellipse(self, growth_grid):
         # Take random point in the grid
         x1, y1 = random.randint(0, len(growth_grid[0]) - 1), random.randint(0, len(growth_grid) - 1)
 
-        # Take random offset for the second point
-        offset_x, offset_y = random.randint(4, 10), random.randint(4, 10)
+        grid_height = len(self.grid.grid)
+        grid_width = len(self.grid.grid[0])
 
-        # Calculate the second point
-        while True:
-            x2, y2 = x1 + offset_x, y1 + offset_y
-            if 0 <= x2 < len(growth_grid[0]) and 0 <= y2 < len(growth_grid) and x1 != x2 and y1 != y2:
-                break
-            offset_x, offset_y = random.randint(4, 10), random.randint(4, 10)
+        # Take random offset for the second point
+        offset_x, offset_y = random.randint(2, int(grid_width / 5)), random.randint(2, int(grid_height / 5))
+        print('ellipse offset', offset_x, offset_y)
+
+        x2, y2 = x1 + offset_x, y1 + offset_y
+        # # Calculate the second point
+        # while True:
+        #     if 0 <= x2 < len(growth_grid[0]) and 0 <= y2 < len(growth_grid) and x1 != x2 and y1 != y2:
+        #         break
+        #     offset_x, offset_y = self.generate_ellipse_offset(x1, y1, x1, y1)
+        #     print('ellipse offset', offset_x, offset_y)
 
         growth_value = self.get_random_growth()
 
@@ -151,7 +157,9 @@ class GridGenerator:
             for j in range(cols):
                 # Check if the point (i, j) is within the ellipse
                 if ((i - center_y)**2) / (b**2) + ((j - center_x)**2) / (a**2) <= 1:
-                    growth_grid[i][j] += growth_value
+                    if (i < grid_height and i >= 0 and j < grid_width and j >= 0):
+                        
+                        growth_grid[i][j] += growth_value
 
         return growth_grid
     
@@ -181,23 +189,27 @@ class GridGenerator:
         return growth_grid
     
     def generate_growth_grid(self):
+        print("Generating growth grid")
         if (not self.grid):
             print("You need to generate grid sizes first")
             return
         
         growth_grid = self.grid.growth_grid.copy()
 
+        print("Generating growth grid lines")
         amount_of_lines = random.randint(4, 4)
         for _ in range(amount_of_lines):
             growth_grid = self.generate_line(growth_grid)  
 
+        print("Generating growth grid ellipses")
         amount_of_ellipses = random.randint(4, 5)
         for _ in range(amount_of_ellipses):
             growth_grid = self.generate_ellipse(growth_grid)
 
+        print("Generating growth grid circles")
         amount_of_circles = random.randint(2, 3)
-        for _ in range(amount_of_circles):
-            growth_grid = self.generate_circle(growth_grid)
+        # for _ in range(amount_of_circles):
+            # growth_grid = self.generate_circle(growth_grid)
 
         self.grid.growth_grid = growth_grid
         self.grid.grid = growth_grid.copy()

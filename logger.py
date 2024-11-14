@@ -33,3 +33,8 @@ class Logger:
         # Log the iteration count on the screen
         if (self.is_log_on_screen):
             self.log_on_screen(f'Iteration: {iterations}', (self.screen.get_width() - 10, 30))
+
+    def log_is_even(self, number):
+        # Log if the number is even or odd on the screen
+        if (self.is_log_on_screen):
+            self.log_on_screen(f'Is even: {number % 2 == 0}', (self.screen.get_width() - 10, 50))
