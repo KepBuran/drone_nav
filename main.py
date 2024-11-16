@@ -13,14 +13,17 @@ import matplotlib.pyplot as plt
 from SeededRandom import SeededRandom
 import datetime
 import os
+import json
 
 IS_RENDER = False
 
-IS_GREEDY = False
-IS_AREAS = True
-IS_CLUSTER = False   
+ALGORITHM_NAME = os.getenv('ALGORITHM_NAME', 'EqualInterest') # 'Greedy' or 'EqualInterest' or 'EqualAreas' or 'Cluster'
 
-DISTRIBUTION_TYPE = 'equal_interest' # 'equal_interest' or 'equal_areas' 
+
+DISTRIBUTION_TYPE = 'equal_interest' if ALGORITHM_NAME == 'EqualInterest' else 'equal_areas' # 'equal_interest' or 'equal_areas' 
+IS_AREAS = ALGORITHM_NAME == 'EqualAreas' or ALGORITHM_NAME == 'EqualInterest' 
+IS_CLUSTER = ALGORITHM_NAME == 'Cluster' 
+IS_GREEDY = ALGORITHM_NAME == 'Greedy' 
 
 IS_DRAW_AREAS = False
 
@@ -31,22 +34,20 @@ CELL_SIZE = 5 # 5
 SPEED = 5
 GROWTH_RATE = 1
 
-INTERVAL_MULTIPLIER = 50
+INTERVAL_MULTIPLIER = 30
 GRID_GENERATION_INTERVAL = 3000 * INTERVAL_MULTIPLIER
 DRONE_AMOUNT_CHANGE_INTERVAL = 1000 * INTERVAL_MULTIPLIER
 DRONE_PUSH_INTERVAL = 2000 * INTERVAL_MULTIPLIER
 
-INIT_DRONES_AMOUNT = 8
+INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 2))
 
-AMOUNT_OF_GRIDS = 10
+AMOUNT_OF_GRIDS = 1
 
 iterations_amount = AMOUNT_OF_GRIDS * GRID_GENERATION_INTERVAL
 
 meta_data = {
     'IS_RENDER': IS_RENDER,
-    'IS_GREEDY': IS_GREEDY,
-    'IS_AREAS': IS_AREAS,
-    'IS_CLUSTER': IS_CLUSTER,
+    'ALGORITHM_NAME': ALGORITHM_NAME,
     'DISTRIBUTION_TYPE': DISTRIBUTION_TYPE,
     'IS_DRAW_AREAS': IS_DRAW_AREAS,
     'SCREEN_WIDTH': SCREEN_WIDTH,
@@ -108,8 +109,8 @@ amount_of_grids = 1
 while True:
     iterations += 1
 
-    # if (iterations % 10 == 0):
-    #     break
+    if (iterations % 10 == 0):
+        break
 
     if (iterations % 1000 == 0):
         print('Progress: {:.2f}%'.format(iterations / iterations_amount * 100))
@@ -168,17 +169,7 @@ while True:
 cells_sum_list = logger.cells_sum_list
 grids_data = logger.grids_data
 
-AlgorithmName = ''
-
-if (IS_GREEDY):
-    AlgorithmName = 'Greedy'
-elif (IS_AREAS):
-    if (DISTRIBUTION_TYPE == 'equal_interest'):
-        AlgorithmName = 'EqualInterest'
-    elif (DISTRIBUTION_TYPE == 'equal_areas'):
-        AlgorithmName = 'EqualAreas'
-elif (IS_CLUSTER):
-    AlgorithmName = 'Cluster'
+AlgorithmName = ALGORITHM_NAME
 
 # Save the data to a file
 
@@ -188,36 +179,31 @@ print('Saving the data to a file...')
 now = datetime.datetime.now()
 date_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-results_dir = './results/' + AlgorithmName + '/'
+results_dir = './results/' + AlgorithmName + '/' + f'dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}' '/'
 os.makedirs(results_dir, exist_ok=True)
 
 # Define the file names
-file_name1 = os.path.join(results_dir, f'INTEREST_dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}.txt')
-file_name2 = os.path.join(results_dir, f'GRIDS_DATA_dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}.txt')
-file_name3 = os.path.join(results_dir, f'META_DATA_dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}.txt')
+file_name1 = os.path.join(results_dir, f'interest.json')
+file_name2 = os.path.join(results_dir, f'grids_data.json')
+file_name3 = os.path.join(results_dir, f'meta_data.json')
 
 with open(file_name1, 'w') as file:
-    for grid_sum_list in cells_sum_list:
-        for grid_sum in grid_sum_list:
-            file.write(str(grid_sum) + ',')
-        file.write('\n')
+    json.dump(cells_sum_list, file)
 
 with open(file_name2, 'w') as file:
-    for grid_data in grids_data:
-        file.write(str(grid_data) + '\n')
+    json.dump(grids_data, file)
 
 with open(file_name3, 'w') as file:
-    for key, value in meta_data.items():
-        file.write(f'{key}: {value}\n')
+    json.dump(meta_data, file)
 
 # Draw the graph
 
-flattened_cells_sum_list = [item for sublist in cells_sum_list for item in sublist]
+# flattened_cells_sum_list = [item for sublist in cells_sum_list for item in sublist]
 
-print('Plotting the graph...')
-plt.plot(flattened_cells_sum_list)
-plt.xlabel('Time Step')
-plt.ylabel('Cells Sum')
-plt.title('Cells Sum Over Time')
-plt.grid(True)
-plt.show()
+# print('Plotting the graph...')
+# plt.plot(flattened_cells_sum_list)
+# plt.xlabel('Time Step')
+# plt.ylabel('Cells Sum')
+# plt.title('Cells Sum Over Time')
+# plt.grid(True)
+# plt.show()

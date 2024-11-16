@@ -1,24 +1,16 @@
-import ast
+import json
 
-grids_data_file = './results/EqualInterest/GRIDS_DATA_drones_amount=4_cell_size=10_2024-11-16 22:43:55.txt'
+grids_data_file = './results/EqualInterest/dronesAmount=2;cellSize=5;2024-11-16 23:58:55/meta_data.json'
+interest_file = './results/EqualInterest/dronesAmount=2;cellSize=5;2024-11-16 23:58:55/interest.json'
 
-interest_file = './results/EqualInterest/INTEREST_drones_amount=4_cell_size=10_2024-11-16 22:43:55.txt'
-
-
-parsed_interest = []
-# Read the file and parse the contents
+# Parse the interest file
 with open(interest_file, 'r') as file:
-    for line in file:
-        # Split the line by commas and convert each element to a float
-        parsed_line = [float(value) for value in line.strip().split(',') if value]
-        # Append the parsed line to the list
-        parsed_interest.append(parsed_line)
+    parsed_interest = json.load(file)
 
-# print(parsed_interest)
+print(parsed_interest)
 
-# Read the file and parse the dictionary
+# Parse the grids data file
 with open(grids_data_file, 'r') as file:
-    data = file.read()
-    parsed_dict = ast.literal_eval(data)
+    parsed_dict = json.load(file)
 
 print(parsed_dict)
