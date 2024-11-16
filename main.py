@@ -11,17 +11,17 @@ from logger import Logger
 from cluster.cluster import Cluster
 import matplotlib.pyplot as plt
 
-DRAW_ENVIRONMENT = True
+IS_RENDER = True
 
 IS_GREEDY = False
-IS_AREAS = False
-IS_CLUSTER = True   
+IS_AREAS = True
+IS_CLUSTER = False   
 
 IS_DRAW_AREAS = True
 
 SCREEN_WIDTH = 1500 # 1500
 SCREEN_HEIGHT = 900
-CELL_SIZE = 20 # 5
+CELL_SIZE = 5 # 5
 
 print('Initializing the environment...')
 
@@ -36,18 +36,18 @@ GROWTH_RATE = 0.005 * 5
 print('Generating the grid...')
 grid_generator = GridGenerator(SCREEN_WIDTH, SCREEN_HEIGHT)
 grid = grid_generator.generate_grid(CELL_SIZE)
-grid_drawer = GridDrawer(pygame, screen, draw_grid_lines=DRAW_ENVIRONMENT)
+grid_drawer = GridDrawer(pygame, screen, draw_grid_lines=IS_RENDER and True)
 
 print('Initializing the swarm...')
-swarm = Swarm(pygame, screen, grid, SPEED, init_drones_amount=4, is_draw=DRAW_ENVIRONMENT)
+swarm = Swarm(pygame, screen, grid, SPEED, init_drones_amount=4, is_draw=IS_RENDER)
 
 print('Initializing the logger...')
-logger = Logger(pygame, screen, grid, is_log_on_screen=DRAW_ENVIRONMENT)
+logger = Logger(pygame, screen, grid, is_log_on_screen=IS_RENDER)
 
 print('Initializing the algorithms...')
 greedy = Greedy(grid, swarm.drones)
 cluster_algorithm = Cluster(grid, swarm.drones)
-areas_algorithm = Areas(grid, swarm.drones)
+areas_algorithm = Areas(grid, swarm.drones, distribution_type='equal_areas')
 
 if (IS_AREAS):
     swarm.set_algorithm(areas_algorithm)
@@ -76,14 +76,14 @@ while True:
     # Screen background color
     screen.fill((0, 0, 0))
 
-    if (IS_AREAS and IS_DRAW_AREAS and DRAW_ENVIRONMENT):
+    if (IS_AREAS and IS_DRAW_AREAS and IS_RENDER):
         grid_drawer.draw_clusters(grid, areas_algorithm.areas_grid, len(swarm.drones))
 
-    if (IS_CLUSTER and IS_DRAW_AREAS and DRAW_ENVIRONMENT):
+    if (IS_CLUSTER and IS_DRAW_AREAS and IS_RENDER):
         grid_drawer.draw_clusters(grid, cluster_algorithm.clusters_grid, len(swarm.drones))
 
     # Grid logic 
-    if (DRAW_ENVIRONMENT):
+    if (IS_RENDER):
         grid_drawer.draw(grid)
         
     grid.increase(GROWTH_RATE)

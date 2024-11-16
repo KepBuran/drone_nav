@@ -1,18 +1,41 @@
 import numpy as np
-from sklearn.cluster import KMeans
 from hungarian_algorithm import HungarianAlgorithm
 
 class Areas:
-    def __init__(self, grid, drones):
+    def __init__(self, grid, drones, distribution_type='equal_interest'):
         self.grid = grid
         self.drones = drones
         self.areas_grid = self.grid.growth_grid.copy()
         self.areas = []
         self.drone_pathes = []
         self.drone_aims = []
+        self.distribution_type = distribution_type
     
+    def make_equal_areas(self):
+        # Divide grid into equal areas
+        areas_amount = len(self.drones)
+        cells_amount = len(self.grid.growth_grid) * len(self.grid.growth_grid[0])
+     
+        areas_grid = []
 
-    def make_areas(self): 
+        cells_per_area = cells_amount / areas_amount
+
+        current_area = 0
+        current_cells = 0
+
+        for row in range(len(self.grid.growth_grid)):
+            areas_grid.append([])
+            for col in range(len(self.grid.growth_grid[0])):
+                if (current_cells >= cells_per_area):
+                    current_area += 1
+                    current_cells = 0
+                areas_grid[row].append(current_area)
+                current_cells += 1
+
+        self.areas_grid = areas_grid
+        
+    
+    def make_equal_interest(self):
         areas_amount = len(self.drones)
         growth_sum = self.grid.get_growth_sum()
         growth_per_area = growth_sum / areas_amount
@@ -36,6 +59,15 @@ class Areas:
         
         self.areas_grid = areas_grid
 
+
+    def make_areas(self): 
+        if (self.distribution_type == 'equal_areas'):
+            self.make_equal_areas()
+        else:
+            self.make_equal_interest()
+
+        areas_amount = len(self.drones)
+
         # Initialize areas array and then populate it with cells coords and indexes for each area
         self.areas = [[] for _ in range(areas_amount)]
 
@@ -47,6 +79,7 @@ class Areas:
                         maybe_row.append([(row, col), self.grid.cell_center_coords(row, col)])
                 if (len(maybe_row) > 0):
                     self.areas[i].append(maybe_row)
+
 
     def calculate_distance(self, drone, area, area_index):
         #Check if drone is already in the area
