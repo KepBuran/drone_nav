@@ -4,31 +4,33 @@ import numpy as np
 import copy
 
 from grid.grid import Grid
+from SeededRandom import SeededRandom
+
 
 class GridGenerator:
     def __init__(self, screen_width, screen_height):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.grid = None
-
+        self.random = SeededRandom()
 
     def generate_grid(self, cell_size): 
         return self.generate_grid_sizes(cell_size).generate_growth_grid().grid 
 
     def generate_grid_sizes(self, cell_size):
-        print("Generating grid sizes")
-        x_offset = random.uniform(0, 0.3) * self.screen_width
-        y_offset = random.uniform(0, 0.3) * self.screen_height
+        # print("Generating grid sizes")
+        x_offset = self.random.uniform(0, 0.3) * self.screen_width
+        y_offset = self.random.uniform(0, 0.3) * self.screen_height
 
-        grid_width = random.uniform(0.5, 0.7) * self.screen_width
-        grid_height = random.uniform(0.5, 0.7) * self.screen_height
+        grid_width = self.random.uniform(0.5, 0.7) * self.screen_width
+        grid_height = self.random.uniform(0.5, 0.7) * self.screen_height
 
         self.grid = Grid(cell_size, math.floor(grid_width / cell_size) * cell_size, math.floor(grid_height / cell_size) * cell_size, x_offset, y_offset)
 
         return self
     
     def get_random_growth(self, min_growth = 2, max_growth = 5):
-        return random.randint(min_growth, max_growth)
+        return self.random.randint(min_growth, max_growth)
     
     
     def bresenham_line(self, x0, y0, x1, y1):
@@ -71,15 +73,15 @@ class GridGenerator:
         
         # Take two random points in the grid with distance between them from 100% to 30% of the grid size
         while True:
-            y1, x1 = random.randint(0, grid_width - 1), random.randint(0, grid_height - 1)
-            y2, x2 = random.randint(0, grid_width - 1), random.randint(0, grid_height - 1)
+            y1, x1 = self.random.randint(0, grid_width - 1), self.random.randint(0, grid_height - 1)
+            y2, x2 = self.random.randint(0, grid_width - 1), self.random.randint(0, grid_height - 1)
             
             distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
             
             if min_distance <= distance:
                 break
 
-        width = random.randint(2, 5)
+        width = self.random.randint(2, 5)
         growth = self.get_random_growth()
 
         # # Make straight line between two points with given width and growth
@@ -123,13 +125,13 @@ class GridGenerator:
 
     def generate_ellipse(self, growth_grid):
         # Take random point in the grid
-        x1, y1 = random.randint(0, len(growth_grid[0]) - 1), random.randint(0, len(growth_grid) - 1)
+        x1, y1 = self.random.randint(0, len(growth_grid[0]) - 1), self.random.randint(0, len(growth_grid) - 1)
 
         grid_height = len(self.grid.grid)
         grid_width = len(self.grid.grid[0])
 
         # Take random offset for the second point
-        offset_x, offset_y = random.randint(2, int(grid_width / 5)), random.randint(2, int(grid_height / 5))
+        offset_x, offset_y = self.random.randint(2, int(grid_width / 5)), self.random.randint(2, int(grid_height / 5))
 
         x2, y2 = x1 + offset_x, y1 + offset_y
         # # Calculate the second point
@@ -165,9 +167,9 @@ class GridGenerator:
     
     def generate_circle(self, growth_grid):
         # Take random point in the grid
-        x1, y1 = random.randint(0, len(growth_grid[0]) - 1), random.randint(0, len(growth_grid) - 1)
+        x1, y1 = self.random.randint(0, len(growth_grid[0]) - 1), self.random.randint(0, len(growth_grid) - 1)
 
-        radius = random.randint(3, 8)
+        radius = self.random.randint(3, 8)
         growth_value = self.get_random_growth()
 
         rows = len(growth_grid)
@@ -189,32 +191,34 @@ class GridGenerator:
         return growth_grid
     
     def generate_growth_grid(self):
-        print("Generating growth grid")
+        # print("Generating growth grid")
         if (not self.grid):
             print("You need to generate grid sizes first")
             return
         
         growth_grid = copy.deepcopy(self.grid.growth_grid)
 
-        print("Generating growth grid lines")
-        amount_of_lines = random.randint(4, 4)
+        # print("Generating growth grid lines")
+        amount_of_lines = self.random.randint(4, 4)
         for _ in range(amount_of_lines):
             growth_grid = self.generate_line(growth_grid)  
 
-        print("Generating growth grid ellipses")
-        amount_of_ellipses = random.randint(4, 5)
+        # print("Generating growth grid ellipses")
+        amount_of_ellipses = self.random.randint(4, 5)
         for _ in range(amount_of_ellipses):
             growth_grid = self.generate_ellipse(growth_grid)
 
-        print("Generating growth grid circles")
-        amount_of_circles = random.randint(2, 3)
+        # print("Generating growth grid circles")
+        amount_of_circles = self.random.randint(2, 3)
         for _ in range(amount_of_circles):
             growth_grid = self.generate_circle(growth_grid)
 
         self.grid.growth_grid = growth_grid
-        print("Growth grid generated")
+        # print("Growth grid generated")
 
         self.grid.grid = copy.deepcopy(growth_grid)
+
+        # print("Growth grid generated, sum of it", np.sum(growth_grid), np.sum(self.grid.grid))
 
         return self
         

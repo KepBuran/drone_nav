@@ -1,4 +1,5 @@
 from drone.drone import Drone
+from SeededRandom import SeededRandom
 
 class Swarm:
     def __init__ (self, pygame, screen, grid, speed, radius=2, init_drones_amount=4, is_draw=True):
@@ -10,6 +11,8 @@ class Swarm:
         self.radius = radius
         self.algorithm = None
 
+        self.random = SeededRandom()
+
         self.is_draw = is_draw
         self.is_env_changed = True
 
@@ -20,18 +23,23 @@ class Swarm:
         self.algorithm.grid = grid
         self.is_env_changed = True
 
+    def pop_drone(self):
+        self.drones.pop()
+        self.is_env_changed = True
+
+    def push_drone(self):
+        width, height = self.pygame.display.get_surface().get_size()
+        drone = Drone(self.pygame, self.screen, (width*self.random.random(), height * self.random.random()), self.speed, (1, 1))
+        self.drones.append(drone)
+        self.is_env_changed = True
+
     def set_algorithm(self, algorithm):
         self.algorithm = algorithm
         
     def init_drones(self, drones_amount):
-        # TODO: Implement the logic to create drones without hardcoded positions
-        # Hardcoded array for positions
-        positions = [(300, 200), (400, 250), (500, 300), (600, 400)]
-
-        # Loop to create drones based on positions
-        for position in positions:
-            self.drones.append(Drone(self.pygame, self.screen, position, self.speed, (1, 1)))
-
+        for i in range(drones_amount):
+            self.push_drone()
+           
     def update(self):
         self.algorithm.run(self.is_env_changed)
         self.is_env_changed = False

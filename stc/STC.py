@@ -79,7 +79,7 @@ class STC:
         path_from = {}
         visit_order = {}
         order = 1
-        print("start_point", start_point)
+        # print("start_point", start_point)
         edges = [(0, start_point, None)] 
 
         # Generate the MST

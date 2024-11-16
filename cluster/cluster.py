@@ -34,9 +34,12 @@ class Cluster:
         #Check if drone is already in the cluster
         drone_cell = self.grid.get_cell_by_coords(drone.position.x, drone.position.y)
 
-        if (self.clusters_grid[drone_cell[0]][drone_cell[1]] == cluster_index):
-            return 0
-
+        try:
+            if self.clusters_grid[drone_cell[0]][drone_cell[1]] == cluster_index:
+                return 0
+        except IndexError:
+            pass
+        
         # Find nearest cluster cell to the drone
         drone_x, drone_y = drone.position.x, drone.position.y
 
@@ -63,7 +66,7 @@ class Cluster:
         # print("Result of hungarian algorithm:\n", result)
 
         self.drones_to_clusters = result
-        print("Drones to clusters:\n", self.drones_to_clusters)
+        # print("Drones to clusters:\n", self.drones_to_clusters)
 
     def calculate_cluster(self):
         n = len(self.drones)

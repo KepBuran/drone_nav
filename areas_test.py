@@ -7,7 +7,6 @@ from grid.drawer import GridDrawer
 from grid.generator import GridGenerator
 from grid.grid import Grid
 from drone.drone import Drone
-import random
 from logger import Logger
 
 SCREEN_WIDTH = 1500

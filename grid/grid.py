@@ -23,6 +23,9 @@ class Grid:
     def get_cells_sum(self):
         return sum(sum(row) for row in self.grid)
     
+    def get_cells_amount(self):
+        return len(self.grid) * len(self.grid[0])
+    
     def get_growth_sum(self):
         return sum(sum(row) for row in self.growth_grid)
     

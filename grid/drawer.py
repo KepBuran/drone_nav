@@ -1,4 +1,3 @@
-import random
 from grid.grid import Grid
 
 

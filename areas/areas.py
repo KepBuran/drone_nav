@@ -85,8 +85,11 @@ class Areas:
         #Check if drone is already in the area
         drone_cell = self.grid.get_cell_by_coords(drone.position.x, drone.position.y)
 
-        if (self.areas_grid[drone_cell[0]][drone_cell[1]] == area_index):
-            return 0
+        try:
+            if self.areas_grid[drone_cell[0]][drone_cell[1]] == area_index:
+                return 0
+        except IndexError:
+            pass
 
         # Find nearest area cell to the drone
         drone_x, drone_y = drone.position.x, drone.position.y
@@ -290,7 +293,8 @@ class Areas:
             drone_cell = self.grid.get_cell_by_coords(drone.position.x, drone.position.y)
 
             if (drone_cell[0] < 0 or drone_cell[1] < 0):
-                print("Drone is out of the grid", "drone index", index, "drone cell", drone_cell, "drone aim", aim)
+                pass
+                # print("Drone is out of the grid", "drone index", index, "drone cell", drone_cell, "drone aim", aim)
 
             if (drone_cell[0] == aim[0][0][0] and drone_cell[1] == aim[0][0][1]):
                 path = self.drone_pathes[index]

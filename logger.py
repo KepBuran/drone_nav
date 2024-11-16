@@ -3,8 +3,28 @@ class Logger:
         self.grid = grid
         self.pygame = pygame
         self.screen = screen
-        self.cells_sum_list = []
+        self.cells_sum_list = [[]]
+        self.current_grid_index = 0
         self.is_log_on_screen = is_log_on_screen
+        self.grids_data = [self.get_current_grid_data()]
+
+    def get_current_grid_data(self):
+        return {
+            'growth_sum': self.grid.get_growth_sum(),
+            'cells_amount': self.grid.get_cells_amount(),
+            'grid_height': len(self.grid.grid),
+            'grid_width': len(self.grid.grid[0]),
+            'x_offset': self.grid.x_offset,
+            'y_offset': self.grid.y_offset,
+            'cell_size': self.grid.cell_size,
+            'growth_grid': self.grid.growth_grid
+        }
+
+    def set_grid(self, grid):
+        self.grid = grid
+        self.grids_data.append(self.get_current_grid_data())
+        self.current_grid_index += 1
+        self.cells_sum_list.append([])
 
     def log_on_screen(self, message, position):
         # Initialize font
@@ -23,7 +43,7 @@ class Logger:
         # Get the sum of the cells
         cells_sum = self.grid.get_cells_sum()
 
-        self.cells_sum_list.append(cells_sum)
+        self.cells_sum_list[self.current_grid_index].append(cells_sum)
         
         # Log the sum on the screen
         if (self.is_log_on_screen):
