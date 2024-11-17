@@ -41,7 +41,7 @@ DRONE_PUSH_INTERVAL = 2000 * INTERVAL_MULTIPLIER
 
 INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 2))
 
-AMOUNT_OF_GRIDS = 1
+AMOUNT_OF_GRIDS = 10
 
 iterations_amount = AMOUNT_OF_GRIDS * GRID_GENERATION_INTERVAL
 
@@ -108,9 +108,6 @@ amount_of_grids = 1
 
 while True:
     iterations += 1
-
-    if (iterations % 10 == 0):
-        break
 
     if (iterations % 1000 == 0):
         print('Progress: {:.2f}%'.format(iterations / iterations_amount * 100))
