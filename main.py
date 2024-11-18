@@ -15,7 +15,7 @@ import datetime
 import os
 import json
 
-IS_RENDER = True
+IS_RENDER = False
 
 ALGORITHM_NAME = os.getenv('ALGORITHM_NAME', 'Greedy') # 'Greedy' or 'EqualInterest' or 'EqualAreas' or 'Cluster'
 
@@ -41,7 +41,7 @@ DRONE_PUSH_INTERVAL = 1 * INTERVAL_MULTIPLIER
 DRONE_POP_TWICE_INTERVAL =  2 * INTERVAL_MULTIPLIER
 DRONE_POP_INTERVAL = 3 * INTERVAL_MULTIPLIER
 
-INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 8))
+INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 0))
 
 AMOUNT_OF_GRIDS = 5
 
@@ -65,7 +65,7 @@ meta_data = {
     'AMOUNT_OF_GRIDS': AMOUNT_OF_GRIDS
 }
 
-seed_str = str(SCREEN_WIDTH) + str(SCREEN_HEIGHT) + str(CELL_SIZE) + str(SPEED) + str(int(GROWTH_RATE)) 
+seed_str = str('14') + str(SCREEN_WIDTH) + str(SCREEN_HEIGHT) + str(CELL_SIZE) + str(SPEED) + str(int(GROWTH_RATE)) 
 seed_str += str(GRID_GENERATION_INTERVAL) + str(DRONE_AMOUNT_CHANGE_INTERVAL) + str(DRONE_PUSH_INTERVAL)
 seed = int(seed_str)
 
@@ -82,7 +82,7 @@ clock = pygame.time.Clock()
 print('Generating the grid...')
 grid_generator = GridGenerator(SCREEN_WIDTH, SCREEN_HEIGHT)
 grid = grid_generator.generate_grid(CELL_SIZE)
-grid_drawer = GridDrawer(pygame, screen, draw_grid_lines=IS_RENDER and True)
+grid_drawer = GridDrawer(pygame, screen, draw_grid_lines=IS_RENDER and False)
 
 print('Initializing the swarm...')
 swarm = Swarm(pygame, screen, grid, SPEED, init_drones_amount=INIT_DRONES_AMOUNT, is_draw=IS_RENDER)
@@ -128,18 +128,18 @@ while True:
         swarm.set_grid(grid)
         logger.set_grid(grid)
 
-    elif (iterations % DRONE_AMOUNT_CHANGE_INTERVAL == 0 and iterations != 0):
-        if (iterations % DRONE_POP_TWICE_INTERVAL == 0):
-            swarm.pop_drone()
-            swarm.pop_drone()
-        else:
-            swarm.push_drone()
+    # elif (iterations % DRONE_AMOUNT_CHANGE_INTERVAL == 0 and iterations != 0):
+    #     if (iterations % DRONE_POP_TWICE_INTERVAL == 0):
+    #         swarm.pop_drone()
+    #         swarm.pop_drone()
+    #     else:
+    #         swarm.push_drone()
 
-        print('Drones amount:', len(swarm.drones), 'Iteration:', iterations + 1)
+    #     print('Drones amount:', len(swarm.drones), 'Iteration:', iterations + 1)
 
-    if (len(swarm.drones) != prev_drones_amount):
-        prev_drones_amount = len(swarm.drones)
-        print('Drones amount:', len(swarm.drones), 'Iteration:', iterations + 1)
+    # if (len(swarm.drones) != prev_drones_amount):
+    #     prev_drones_amount = len(swarm.drones)
+    #     print('Drones amount:', len(swarm.drones), 'Iteration:', iterations + 1)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -187,7 +187,7 @@ print('Saving the data to a file...')
 now = datetime.datetime.now()
 date_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-results_dir = './results/' + AlgorithmName + '/' + f'dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}' '/'
+results_dir = './results/' + AlgorithmName + '/test3_' + f'dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}' '/'
 os.makedirs(results_dir, exist_ok=True)
 
 # Define the file names
