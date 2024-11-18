@@ -15,9 +15,9 @@ import datetime
 import os
 import json
 
-IS_RENDER = False
+IS_RENDER = True
 
-ALGORITHM_NAME = os.getenv('ALGORITHM_NAME', 'EqualInterest') # 'Greedy' or 'EqualInterest' or 'EqualAreas' or 'Cluster'
+ALGORITHM_NAME = os.getenv('ALGORITHM_NAME', 'Greedy') # 'Greedy' or 'EqualInterest' or 'EqualAreas' or 'Cluster'
 
 
 DISTRIBUTION_TYPE = 'equal_interest' if ALGORITHM_NAME == 'EqualInterest' else 'equal_areas' # 'equal_interest' or 'equal_areas' 
@@ -29,19 +29,21 @@ IS_DRAW_AREAS = False
 
 SCREEN_WIDTH = 1500 # 1500
 SCREEN_HEIGHT = 900
-CELL_SIZE = 5 # 5
+CELL_SIZE = 10 # 5
 
 SPEED = 5
 GROWTH_RATE = 1
 
-INTERVAL_MULTIPLIER = 30
-GRID_GENERATION_INTERVAL = 3000 * INTERVAL_MULTIPLIER
-DRONE_AMOUNT_CHANGE_INTERVAL = 1000 * INTERVAL_MULTIPLIER
-DRONE_PUSH_INTERVAL = 2000 * INTERVAL_MULTIPLIER
+INTERVAL_MULTIPLIER = 20000
+GRID_GENERATION_INTERVAL = 4 * INTERVAL_MULTIPLIER
+DRONE_AMOUNT_CHANGE_INTERVAL = 1 * INTERVAL_MULTIPLIER
+DRONE_PUSH_INTERVAL = 1 * INTERVAL_MULTIPLIER
+DRONE_POP_TWICE_INTERVAL =  2 * INTERVAL_MULTIPLIER
+DRONE_POP_INTERVAL = 3 * INTERVAL_MULTIPLIER
 
-INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 2))
+INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 8))
 
-AMOUNT_OF_GRIDS = 10
+AMOUNT_OF_GRIDS = 5
 
 iterations_amount = AMOUNT_OF_GRIDS * GRID_GENERATION_INTERVAL
 
@@ -99,6 +101,9 @@ if (IS_AREAS):
 if (IS_CLUSTER):
     swarm.set_algorithm(cluster_algorithm)
 
+if (IS_GREEDY):
+    swarm.set_algorithm(greedy)
+
 
 iterations = 0
 
@@ -106,6 +111,8 @@ print('Starting the simulation...')
 
 amount_of_grids = 1
 
+
+prev_drones_amount = len(swarm.drones)
 while True:
     iterations += 1
 
@@ -121,11 +128,18 @@ while True:
         swarm.set_grid(grid)
         logger.set_grid(grid)
 
-    if (iterations % DRONE_AMOUNT_CHANGE_INTERVAL == 0 and iterations != 0):
-        if (iterations % DRONE_PUSH_INTERVAL == 0):
-            swarm.push_drone()
-        else:
+    elif (iterations % DRONE_AMOUNT_CHANGE_INTERVAL == 0 and iterations != 0):
+        if (iterations % DRONE_POP_TWICE_INTERVAL == 0):
             swarm.pop_drone()
+            swarm.pop_drone()
+        else:
+            swarm.push_drone()
+
+        print('Drones amount:', len(swarm.drones), 'Iteration:', iterations + 1)
+
+    if (len(swarm.drones) != prev_drones_amount):
+        prev_drones_amount = len(swarm.drones)
+        print('Drones amount:', len(swarm.drones), 'Iteration:', iterations + 1)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -149,9 +163,6 @@ while True:
 
     # Update all swarm drones
     swarm.update()
-
-    if (IS_GREEDY):
-        greedy.run()
     
 
     # Logger logic

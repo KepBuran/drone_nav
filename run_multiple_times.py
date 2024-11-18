@@ -2,7 +2,7 @@ import os
 import subprocess
 
 # List of different INIT_DRONES_AMOUNT values
-drones_amount_list = [2, 4, 8]
+drones_amount_list = [4]
 algorithm_names = ['EqualInterest', 'EqualAreas', 'Cluster']
 
 for algorithm_name in algorithm_names:

@@ -40,6 +40,19 @@ class Grid:
         return [(self.grid[i][j], i, j) 
                 for i in range(max(0, row - n), min(len(self.grid), row + n + 1)) 
                 for j in range(max(0, col - n), min(len(self.grid[0]), col + n + 1))]
+    
+    def nearest_cell_to_coords(self, x, y):
+        row, col = self.get_cell_by_coords(x, y)
+        if (row < 0):
+            row = 0
+        if (col < 0):
+            col = 0
+        if (row >= len(self.grid)):
+            row = len(self.grid) - 1
+        if (col >= len(self.grid[0])):
+            col = len(self.grid[0]) - 1
+
+        return [row, col]
 
     def cell_center_coords(self, row, col):
         return (col * self.cell_size + self.cell_size // 2 + self.x_offset, row * self.cell_size + self.cell_size // 2 + self.y_offset)
