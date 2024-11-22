@@ -1,0 +1,5 @@
+average_interest,average_interest_per_cell,volatility,algorithm,drones_amount,folder
+0.0,0.0,0.0,,0.0,
+129538017.5033606,5786.563812354177,50887146.03582374,,,results/Cluster/test4_dronesAmount=4;cellSize=5;2024-11-18 19:27:39
+53440227.51540013,2387.2164529348756,12143003.832440507,,,results/EqualAreas/test4_dronesAmount=4;cellSize=5;2024-11-18 19:15:59
+53311415.41527005,2381.4623164151726,12270132.968510088,,,results/EqualInterest/test4_dronesAmount=4;cellSize=5;2024-11-18 19:04:32

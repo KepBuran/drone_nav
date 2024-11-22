@@ -29,19 +29,19 @@ IS_DRAW_AREAS = False
 
 SCREEN_WIDTH = 1500 # 1500
 SCREEN_HEIGHT = 900
-CELL_SIZE = 10 # 5
+CELL_SIZE = 5 # 5
 
 SPEED = 5
 GROWTH_RATE = 1
 
-INTERVAL_MULTIPLIER = 20000
+INTERVAL_MULTIPLIER = 5000
 GRID_GENERATION_INTERVAL = 4 * INTERVAL_MULTIPLIER
 DRONE_AMOUNT_CHANGE_INTERVAL = 1 * INTERVAL_MULTIPLIER
 DRONE_PUSH_INTERVAL = 1 * INTERVAL_MULTIPLIER
 DRONE_POP_TWICE_INTERVAL =  2 * INTERVAL_MULTIPLIER
 DRONE_POP_INTERVAL = 3 * INTERVAL_MULTIPLIER
 
-INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 0))
+INIT_DRONES_AMOUNT = int(os.getenv('INIT_DRONES_AMOUNT', 4))
 
 AMOUNT_OF_GRIDS = 5
 
@@ -187,7 +187,7 @@ print('Saving the data to a file...')
 now = datetime.datetime.now()
 date_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-results_dir = './results/' + AlgorithmName + '/test3_' + f'dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}' '/'
+results_dir = './results/' + AlgorithmName + '/test4_' + f'dronesAmount={INIT_DRONES_AMOUNT};cellSize={CELL_SIZE};{date_time}' '/'
 os.makedirs(results_dir, exist_ok=True)
 
 # Define the file names

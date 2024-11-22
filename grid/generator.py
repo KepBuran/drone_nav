@@ -29,7 +29,7 @@ class GridGenerator:
 
         return self
     
-    def get_random_growth(self, min_growth = 102, max_growth = 105):
+    def get_random_growth(self, min_growth = 2, max_growth = 5):
         return self.random.randint(min_growth, max_growth)
     
     
@@ -73,8 +73,8 @@ class GridGenerator:
         
         # Take two random points in the grid with distance between them from 100% to 30% of the grid size
         while True:
-            y1, x1 = self.random.randint(0, grid_width - 1), self.random.randint(0, math.floor(grid_height/2) - 1)
-            y2, x2 = self.random.randint(0, grid_width - 1), self.random.randint(0, math.floor(grid_height/2) - 1)
+            y1, x1 = self.random.randint(0, grid_width - 1), self.random.randint(0, math.floor(grid_height) - 1)
+            y2, x2 = self.random.randint(0, grid_width - 1), self.random.randint(0, math.floor(grid_height) - 1)
             
             distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
             
@@ -125,7 +125,7 @@ class GridGenerator:
 
     def generate_ellipse(self, growth_grid):
         # Take random point in the grid
-        x1, y1 = self.random.randint(0, len(growth_grid[0]) - 1), self.random.randint(0, math.floor(len(growth_grid) / 2) - 1)
+        x1, y1 = self.random.randint(0, len(growth_grid[0]) - 1), self.random.randint(0, math.floor(len(growth_grid)) - 1)
 
         grid_height = len(self.grid.grid)
         grid_width = len(self.grid.grid[0])
@@ -167,7 +167,7 @@ class GridGenerator:
     
     def generate_circle(self, growth_grid):
         # Take random point in the grid
-        x1, y1 = self.random.randint(0, len(growth_grid[0]) - 1), self.random.randint(0, math.floor(len(growth_grid) / 2) - 1)
+        x1, y1 = self.random.randint(0, len(growth_grid[0]) - 1), self.random.randint(0, math.floor(len(growth_grid)) - 1)
 
         radius = self.random.randint(3, 8)
         growth_value = self.get_random_growth()

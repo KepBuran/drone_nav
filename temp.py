@@ -28,7 +28,7 @@
 #         if 0 <= bx + w < grid_width and 0 <= by + w < grid_height:
 #             growth_grid[by + w][bx + w] += growth
 
-base = 7386267.41641252
+base = 53440227.515
 
 
 
@@ -36,9 +36,10 @@ base = 7386267.41641252
 
 
 arr=[
-    11384797.15255,
-    7376242.10983256,
-    8407409.94824247
+    108449108.647,
+53311415.415,
+129538017.50
+
 ]
 
 # Convert arr values to percentages relative to base

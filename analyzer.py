@@ -28,28 +28,33 @@ cluster = [
     'results/Cluster/dronesAmount=2;cellSize=10;2024-11-17 16:22:38',
     'results/Cluster/dronesAmount=4;cellSize=10;2024-11-17 16:30:47',
     'results/Cluster/dronesAmount=8;cellSize=10;2024-11-17 16:38:49',
-    'results/Cluster/dronesAmount=4;cellSize=10;2024-11-17 18:35:25'
+    'results/Cluster/dronesAmount=4;cellSize=10;2024-11-17 18:35:25',
+    'results/Cluster/test4_dronesAmount=4;cellSize=5;2024-11-18 19:27:39'
+
 ]
 
 equal_areas = [
     'results/EqualAreas/dronesAmount=2;cellSize=10;2024-11-17 15:59:48',
     'results/EqualAreas/dronesAmount=4;cellSize=10;2024-11-17 16:07:30',
     'results/EqualAreas/dronesAmount=8;cellSize=10;2024-11-17 16:14:38',
-    'results/EqualAreas/dronesAmount=4;cellSize=10;2024-11-17 17:56:55'
+    'results/EqualAreas/dronesAmount=4;cellSize=10;2024-11-17 17:56:55',
+    'results/EqualAreas/test4_dronesAmount=4;cellSize=5;2024-11-18 19:15:59'
 ]
 
 equal_interest = [
     'results/EqualInterest/dronesAmount=2;cellSize=10;2024-11-17 15:36:01',
     'results/EqualInterest/dronesAmount=4;cellSize=10;2024-11-17 15:44:04',
     'results/EqualInterest/dronesAmount=8;cellSize=10;2024-11-17 15:52:04',
-    'results/EqualInterest/dronesAmount=4;cellSize=10;2024-11-17 17:18:01'
+    'results/EqualInterest/dronesAmount=4;cellSize=10;2024-11-17 17:18:01',
+    'results/EqualInterest/test4_dronesAmount=4;cellSize=5;2024-11-18 19:04:32'
 ]
 
 greedy = [
     'results/Greedy/dronesAmount=2;cellSize=10;2024-11-18 12:02:59',
     'results/Greedy/dronesAmount=4;cellSize=10;2024-11-18 12:11:29',
     'results/Greedy/dronesAmount=4;cellSize=10;2024-11-18 13:27:08',
-    'results/Greedy/dronesAmount=8;cellSize=10;2024-11-18 12:22:07'
+    'results/Greedy/test4_dronesAmount=4;cellSize=5;2024-11-18 19:41:40',
+    'results/Greedy/test4_dronesAmount=4;cellSize=5;2024-11-18 19:41:40'   
 ]
 
 def read_all_data(folder):
@@ -195,12 +200,12 @@ def compare_data(folder1, folder2, folder3, name, global_df):
     print('Difference in average interest 3:', (average_interest3 - average_interest2) / average_interest2 * 100, '%')
 
 
-    label1 = 'Кластеризаційний алгоритм на основі K-Means'
+    # label1 = 'Кластеризаційний алгоритм на основі K-Means'
     label2 = 'Алгоритм рівномірного поділу простору '
     label3 = 'Алгоритм рівних ділянок інтересу'
 
     print('Plotting the comparison graph...')
-    plt.plot(average_interest_list1, label=f'{label1}')
+    # plt.plot(average_interest_list1, label=f'{label1}')
     plt.plot(average_interest_list2, label=f'{label2}')
     plt.plot(average_interest_list3, label=f'{label3}')
     plt.xlabel('Ітерація')
@@ -227,19 +232,19 @@ def compare_data(folder1, folder2, folder3, name, global_df):
 # for folder in greedy:
 #     global_df = analyze_data(folder, global_df)
 
-global_df = analyze_data(greedy[3], global_df)
+global_df = analyze_data(greedy[4], global_df)
 
 # print(global_df)
 
 # # Save the global DataFrame to a CSV file
 
 
-# folder_number = 3
+# folder_number = 4
 
 # folder1 = cluster[folder_number]
 # folder2 = equal_areas[folder_number]
 # folder3 = equal_interest[folder_number]
 
-# global_df = compare_data(folder1, folder2, folder3, 'drones=4-float', global_df)
+# global_df = compare_data(folder1, folder2, folder3, 'drones=4-test4-no-cluster', global_df)
 
-global_df.to_csv('./results/analysis_data_greedy_float.csv', index=False)
+global_df.to_csv('./results/analysis_data_test4_greedy.csv', index=False)
